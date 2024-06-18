@@ -74,29 +74,8 @@ describe('Naukri Job Application Automation', () => {
     cy.log('Performed Job Search');
 
     // Loop through job listings and apply
-    cy.get('.jobTuple').each(($el, index, $list) => {
-      cy.wrap($el).within(() => {
-        // Check if the job is already applied
-        cy.get('.appliedIcon').then(($icon) => {
-          if ($icon.length === 0) {
-            // Click on the job title
-            cy.get('.title').click();
-            cy.log('Clicked on Job Title');
-
-            // Click on the apply button
-            cy.contains('Apply').click();
-            cy.log('Clicked Apply');
-
-            // Wait for the apply process to complete
-            cy.wait(2000);
-            cy.log('Applied for Job');
-
-            // Go back to the job listings
-            cy.go('back');
-            cy.log('Returned to Job Listings');
-          }
-        });
-      });
+    cy.get('[class="srp-jobtuple-wrapper"]').each(($el, index, $list) => {
+      cy.wrap($el).click();
     });
   });
 });
