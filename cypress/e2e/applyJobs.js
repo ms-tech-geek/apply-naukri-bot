@@ -73,9 +73,37 @@ describe('Naukri Job Application Automation', () => {
     cy.wait(5000);
     cy.log('Performed Job Search');
 
-    // Loop through job listings and apply
-    cy.get('[class="srp-jobtuple-wrapper"]').each(($el, index, $list) => {
-      cy.wrap($el).click();
-    });
+    // Extract job links
+    const jobLinks = [];
+    cy.get('[class="srp-jobtuple-wrapper"] a')
+      .each(($el) => {
+        let link = $el.attr('href');
+        if (link && !link.startsWith('http')) {
+          link = `https://www.naukri.com${link}`;
+        }
+        jobLinks.push(link);
+      })
+      .then(() => {
+        cy.wrap(jobLinks).each((link) => {
+          if (link) {
+            cy.visit(link);
+            cy.log('Visited Job Link: ' + link);
+
+            // Wait for the apply button to be visible
+            cy.contains('Apply', { timeout: 10000 })
+              .should('be.visible')
+              .click();
+            cy.log('Clicked Apply');
+
+            // Wait for the apply process to complete
+            cy.wait(2000);
+            cy.log('Applied for Job');
+
+            // Go back to the search results
+            cy.go('back');
+            cy.wait(3000); // Wait for the search results page to load
+          }
+        });
+      });
   });
 });
