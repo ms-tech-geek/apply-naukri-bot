@@ -6,6 +6,14 @@ describe('Naukri Job Application Automation', () => {
   const keywords = 'react developer';
   const location = 'gurgaon';
 
+  before(() => {
+    // Catch and ignore uncaught exceptions
+    Cypress.on('uncaught:exception', (err, runnable) => {
+      // Returning false here prevents Cypress from failing the test
+      return false;
+    });
+  });
+
   it('logs in and applies for jobs', () => {
     // Intercept network requests
     cy.intercept('GET', '**/').as('naukriHome');
