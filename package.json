@@ -11,5 +11,8 @@
   "description": "",
   "devDependencies": {
     "cypress": "^13.11.0"
+  },
+  "dependencies": {
+    "puppeteer": "^22.11.2"
   }
 }
