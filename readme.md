@@ -22,8 +22,8 @@ This project automates the job application process on Naukri.com using Puppeteer
    ```plaintext
    NAUKRI_USERNAME=your-email@example.com
    NAUKRI_PASSWORD=yourpassword
-   JOB_KEYWORDS=react developer
-   JOB_LOCATION=gurgaon
+   JOB_KEYWORDS=your-job-keywords
+   JOB_LOCATION=your-job-location
    ```
 
 4. Ensure the `.env` file is added to `.gitignore` to prevent sensitive information from being pushed to the repository:
