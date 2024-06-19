@@ -73,8 +73,9 @@ describe('Fetch Job Links from Naukri', () => {
     cy.wait(5000);
     cy.log('Performed Job Search');
 
-    // Extract job links and save to JSON file
-    const jobLinks = [];
+    // Extract job links and save to JSON files
+    const internalSiteJobs = [];
+    const externalSiteJobs = [];
     cy.get('[class="srp-jobtuple-wrapper"] a')
       .each(($el) => {
         let link = $el.attr('href');
@@ -82,11 +83,24 @@ describe('Fetch Job Links from Naukri', () => {
           link = `https://www.naukri.com${link}`;
         }
         cy.log('Extracted link: ' + link);
-        jobLinks.push(link);
+
+        if (link.includes('naukri.com')) {
+          internalSiteJobs.push(link);
+        } else {
+          externalSiteJobs.push(link);
+        }
       })
       .then(() => {
-        cy.writeFile('cypress/fixtures/jobLinks.json', jobLinks);
-        cy.log('Saved job links to jobLinks.json');
+        cy.writeFile(
+          'cypress/fixtures/internalSiteJobs.json',
+          internalSiteJobs
+        );
+        cy.writeFile(
+          'cypress/fixtures/externalSiteJobs.json',
+          externalSiteJobs
+        );
+        cy.log('Saved internal job links to internalSiteJobs.json');
+        cy.log('Saved external job links to externalSiteJobs.json');
       });
   });
 });
