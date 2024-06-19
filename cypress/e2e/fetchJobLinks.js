@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-describe('Fetch Job Links from Naukri', () => {
+describe('Naukri Job Application Automation', () => {
   const username = 'thecorporator@gmail.com'; // Your naukri.com email
   const password = 'D3f@u!0r'; // Your naukri.com password
   const keywords = 'react developer';
@@ -22,7 +22,12 @@ describe('Fetch Job Links from Naukri', () => {
     cy.intercept('GET', '**/').as('naukriHome');
 
     // Visit Naukri.com homepage
-    cy.visit('https://www.naukri.com');
+    cy.visit('https://www.naukri.com', {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+      },
+    });
     cy.wait('@naukriHome');
     cy.log('Visited Naukri Homepage');
 
@@ -102,5 +107,30 @@ describe('Fetch Job Links from Naukri', () => {
         cy.log('Saved internal job links to internalSiteJobs.json');
         cy.log('Saved external job links to externalSiteJobs.json');
       });
+  });
+
+  it.only('opens the first internal job link', () => {
+    cy.readFile('cypress/fixtures/internalSiteJobs.json').then((jobLinks) => {
+      if (jobLinks.length > 0) {
+        const firstJobLink = jobLinks[0];
+        cy.log('Opening first job link: ' + firstJobLink);
+
+        // Read headers and cookies from JSON files
+        cy.readFile('cypress/fixtures/headers.json').then((headers) => {
+          cy.readFile('cypress/fixtures/cookies.json').then((cookies) => {
+            // Visit the first job link with headers
+            cy.visit(firstJobLink, {
+              headers: {
+                'User-Agent':
+                  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+              },
+            });
+            cy.log('Visited first job link: ' + firstJobLink);
+          });
+        });
+      } else {
+        cy.log('No job links found in internalSiteJobs.json');
+      }
+    });
   });
 });
