@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+require('dotenv').config(); // Load environment variables from .env file
 
 // Utility function to introduce delay
 function delay(time) {
@@ -17,21 +18,22 @@ function delay(time) {
     fs.readFileSync('cypress/fixtures/internalSiteJobs.json')
   );
 
+  // Load credentials and job search parameters from environment variables
+  const username = process.env.NAUKRI_USERNAME;
+  const password = process.env.NAUKRI_PASSWORD;
+
   // Log in to Naukri
   await page.goto('https://www.naukri.com/');
-  await page.click('a[data-ga-track="Main Navigation Login|Login Icon"]');
-
-  await delay(10000);
-
+  await page.click('a[data-ga-track="Main Navigation LogIn"]');
   await page.type(
     'input[placeholder="Enter your active Email ID / Username"]',
-    'thecorporator@gmail.com'
+    username
   );
-  await page.type('input[placeholder="Enter your password"]', 'D3f@u!0r');
+  await page.type('input[placeholder="Enter your password"]', password);
   await page.click('button[type="submit"]');
 
   // Wait for login to complete
-  await delay(10000); // Use delay instead of waitForTimeout
+  await delay(10000);
 
   for (const jobLink of jobLinks) {
     try {
@@ -59,7 +61,7 @@ function delay(time) {
       console.log(`Applied for job: ${jobLink}`);
 
       // Wait for the application process to complete
-      await delay(2000); // Use delay instead of waitForTimeout
+      await delay(2000);
     } catch (error) {
       console.error(`Failed to apply for job: ${jobLink}`, error);
 

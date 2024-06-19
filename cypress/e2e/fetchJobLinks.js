@@ -1,10 +1,11 @@
 const fs = require('fs');
+require('dotenv').config(); // Load environment variables from .env file
 
-describe('Naukri Job Application Automation', () => {
-  const username = 'thecorporator@gmail.com'; // Your naukri.com email
-  const password = 'D3f@u!0r'; // Your naukri.com password
-  const keywords = 'react developer';
-  const location = 'gurgaon';
+describe('Fetch Job Links from Naukri', () => {
+  const username = process.env.NAUKRI_USERNAME;
+  const password = process.env.NAUKRI_PASSWORD;
+  const keywords = process.env.JOB_KEYWORDS;
+  const location = process.env.JOB_LOCATION;
 
   before(() => {
     // Catch and ignore uncaught exceptions
